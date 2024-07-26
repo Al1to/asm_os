@@ -1,7 +1,5 @@
 include ./kernel/kernel.mk
 
-.PHONEY: all run
-
 all: iso
 
 run: iso

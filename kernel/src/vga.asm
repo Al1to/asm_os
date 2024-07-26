@@ -56,10 +56,26 @@ init_vga:
     pop ebx
     ret
 
-; in:  -
+; in:  eax = &str, ecx = len
 ; out: void
 global vga_print
 vga_print:
+    push edx
+
+    xor edx, edx
+
+    .loop_start:
+        cmp edx, ecx
+        jnb .loop_end
+
+        mov bl, byte [eax + edx]
+        call vga_putc
+
+        inc edx
+        jmp .loop_start
+    .loop_end:
+
+    pop edx
     ret
 
 ; in:  bx = char
@@ -73,9 +89,9 @@ vga_putc:
     mov cx, [vga_color]
     call vga_entry
 
-    mov edx, [vga_row]
+    mov dx, word [vga_row]
     imul edx, vga_width
-    add edx, [vga_col]
+    add dx, word [vga_col]
     mov word [vga_buf_ptr + edx * 2], ax
 
     mov edx, [vga_col]
@@ -93,6 +109,7 @@ vga_putc:
 ; out: void
 vga_upd_cursor:
     push ax
+    push dx
 
     mov ax, [vga_row]
     imul ax, word vga_width
@@ -100,15 +117,20 @@ vga_upd_cursor:
     mov word [vga_pos], ax
 
     mov al, 0x0F 
-    out byte 0x3D4, al
+    mov dx, 0x03D4
+    out dx, al
+    inc dx
     mov al, byte [vga_pos]
-    out byte 0x3D5, al
+    out dx, al
 
     mov al, 0x0E
-    out byte 0x3D4, al
+    dec dx
+    out dx, al
     mov al, byte [vga_pos + 1]
-    out byte 0x3D5, al
+    inc dx
+    out dx, al
 
+    pop dx
     pop ax
     ret
 
