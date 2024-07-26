@@ -7,6 +7,8 @@ OBJECTS:=\
 build/boot.o\
 build/kernel.o\
 build/vga.o\
+build/gdt.o\
+build/memset.o\
 
 iso: build os.iso
 	
@@ -26,4 +28,7 @@ build/os.bin: $(OBJECTS) kernel/linker.ld
 	$(CC) -T kernel/linker.ld -fno-pic -Wl,--build-id=none -o $@ $(CFLAGS) $(OBJECTS) $(LIBS)
 
 build/%.o: kernel/src/%.asm
+	$(AS) $< -g -o $@
+
+build/%.o: kernel/src/util/%.asm
 	$(AS) $< -g -o $@

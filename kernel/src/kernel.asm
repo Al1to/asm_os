@@ -1,15 +1,17 @@
 extern vga_print
-extern vga_putc
 
 section .data
-    msg db "string"
-    len equ 6
+    msg db "El psy cogroo."
+    len equ $-msg
 
 section .text
 global kernel
 kernel:
     extern init_vga
-    call init_vga
+    call   init_vga
+
+    extern init_gdt
+    call   init_gdt
 
     mov eax, msg
     mov ecx, len

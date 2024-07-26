@@ -1,7 +1,7 @@
 section .data
     vga_buf_ptr equ 0xC00B8000
-    vga_height equ 25
-    vga_width  equ 80
+    vga_height  equ 25
+    vga_width   equ 80
 
     vga_row dw 0
     vga_col dw 0
@@ -136,6 +136,7 @@ vga_upd_cursor:
 
 ; in:  bl = fg color, cl = bg color
 ; out: al = (fg | bg << 4)
+; modifies: al
 vga_entry_color:
     mov al, bl
     shl cl, 4
@@ -144,6 +145,7 @@ vga_entry_color:
 
 ; in:  bx = char, cx = color
 ; out: ax = (char | color << 8)
+; modifies: ax
 vga_entry:
     mov ax, bx
     shl cx, 8
