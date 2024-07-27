@@ -13,6 +13,9 @@ kernel:
     extern init_gdt
     call   init_gdt
 
+    extern init_idt
+    call   init_idt
+
     mov eax, msg
     mov ecx, len
     call vga_print

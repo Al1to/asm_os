@@ -9,6 +9,7 @@ build/kernel.o\
 build/vga.o\
 build/gdt.o\
 build/memset.o\
+build/idt.o\
 
 iso: build os.iso
 	

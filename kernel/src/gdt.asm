@@ -27,7 +27,7 @@ init_gdt:
     xor eax, eax
     xor ebx, ebx
     xor dx, dx
-    call set_gdt_entry
+    call set_gdt_gate
 
     mov ebx, 0xFFFFFFFF
 
@@ -35,25 +35,25 @@ init_gdt:
     inc eax
     xor ecx, ecx
     mov dx, 0xCF9A
-    call set_gdt_entry
+    call set_gdt_gate
 
     ; kernel data
     inc eax
     xor ecx, ecx
     mov dx, 0xCF92
-    call set_gdt_entry
+    call set_gdt_gate
 
     ; user code
     inc eax
     xor ecx, ecx
     mov dx, 0xCFFA
-    call set_gdt_entry
+    call set_gdt_gate
 
     ; user data
     inc eax
     xor ecx, ecx
     mov dx, 0xCFF2
-    call set_gdt_entry
+    call set_gdt_gate
 
     ; tss
     inc eax
@@ -82,7 +82,7 @@ init_gdt:
 ; in:  eax = num, ebx = limit, ecx = base, dx = flags 0x0F00 | access 0x00FF
 ; out: void
 ; modifies: ecx, dx
-set_gdt_entry:
+set_gdt_gate:
     mov word [gdt_entries + (gdt_entry_size * eax) + 0], bx  ; limit   0-15
 
     mov word [gdt_entries + (gdt_entry_size * eax) + 2], cx  ; base    16-31
@@ -122,7 +122,7 @@ set_tss_entry:
 
     add ebx, ecx
     mov dx, 0x00E9
-    call set_gdt_entry
+    call set_gdt_gate
 
     mov dword [tss_entry + 8], 0x10
 
